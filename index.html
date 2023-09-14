@@ -29,8 +29,15 @@
         <h2 class="w-75">Hey buddy,</h2>
         <h2 class="w-75">where do you do the laundry?</h2>
         <div class="my-2 d-flex flex-column">
-          <label for="inputCountry">Pais</label>
-          <input type="text" id="inputCountry" />
+          <label for="inputCountry" class="form-label">Pais</label>
+          <input
+            class="form-control"
+            list="dataListCountries"
+            type="text"
+            id="inputCountry"
+            placeholder="Type to search..."
+          />
+          <datalist id="dataListCountries"></datalist>
         </div>
         <div class="my-2 d-flex flex-column">
           <label for="inputCity">Ciudad</label>
@@ -39,6 +46,9 @@
         <div class="my-2"><button type="submit">Submit</button></div>
       </form>
     </main>
+    <script type="module" src="./js/petitionManager.js"></script>
+    <script type="module" src="./js/countriesnow.js"></script>
+    <script type="module" src="./js/homeForm.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"

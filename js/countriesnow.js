@@ -17,4 +17,16 @@ async function getAllCitiesOfCountry(countryName) {
   console.log(apiResponseJSON);
   return apiResponseJSON.data;
 }
-export { getAllCountries, getAllCitiesOfCountry };
+
+async function getCountryISO(countryName) {
+  const apiResponseJSON = await postJSON(
+    'https://countriesnow.space/api/v0.1/countries/iso',
+    {
+      country: countryName,
+    }
+  );
+  console.log(apiResponseJSON);
+  return apiResponseJSON.data;
+}
+
+export { getAllCountries, getAllCitiesOfCountry, getCountryISO };

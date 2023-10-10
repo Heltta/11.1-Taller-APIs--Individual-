@@ -1,6 +1,8 @@
-async function getJSON(url) {
+async function getJSON(url, data = {}) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(
+      url + '?' + new URLSearchParams(data).toString()
+    );
     return await response.json();
   } catch (error) {
     console.warn(error);

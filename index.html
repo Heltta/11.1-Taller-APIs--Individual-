@@ -25,7 +25,12 @@
     <main
       class="vw-100 h-100 d-flex flex-column justify-content-start align-items-center py-5"
     >
-      <form action="" method="post" class="d-flex flex-column p-2">
+      <form
+        action=""
+        method="post"
+        class="d-flex flex-column p-2"
+        id="askLaundryBuddyForm"
+      >
         <h2 class="w-75">Hey buddy,</h2>
         <h2 class="w-75">where do you do the laundry?</h2>
         <div class="my-2 d-flex flex-column">
@@ -36,6 +41,7 @@
             type="text"
             id="inputCountry"
             placeholder="Type to search..."
+            name="countryName"
           />
           <datalist id="dataListCountries"></datalist>
         </div>
@@ -47,6 +53,7 @@
             type="text"
             id="inputCity"
             placeholder="Type to search..."
+            name="cityName"
           />
           <datalist id="dataListCities"></datalist>
         </div>

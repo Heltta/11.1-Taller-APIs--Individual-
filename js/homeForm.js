@@ -1,4 +1,9 @@
-import { getAllCountries, getAllCitiesOfCountry } from './countriesnow.js';
+import {
+  getAllCountries,
+  getAllCitiesOfCountry,
+  getCountryISO,
+} from './countriesnow.js';
+import { getCityCoordinates } from './openweather.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Insert countries data list
@@ -12,13 +17,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     optionCountry.value = countryData.country;
     dataListCountries.appendChild(optionCountry);
   });
+
+  // Define country ISO variable
+  /**
+   * @type {Promise}
+   */
+  let countryCodesPromise;
+
   // Insert country's cities data list
   document
     .getElementById('inputCountry')
     .addEventListener('input', async (e) => {
       if (!countriesData.some((countryData) => countryData.country === e.data))
         return;
-      const citiesData = await getAllCitiesOfCountry(e.data.toLowerCase());
+      const countryName = e.data.toLowerCase();
+      countryCodesPromise = getCountryISO(countryName);
+      const citiesData = await getAllCitiesOfCountry(countryName);
       const dataListCities = document.getElementById('dataListCities');
       dataListCities.innerHTML = '';
       citiesData &&
@@ -27,5 +41,25 @@ document.addEventListener('DOMContentLoaded', async () => {
           optionCity.value = cityName;
           dataListCities.appendChild(optionCity);
         });
+    });
+
+  // Insert openWeather API petition
+  document
+    .getElementById('askLaundryBuddyForm')
+    .addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Read city's name
+      const cityName = e.target
+        .querySelector('input[name=cityName]')
+        .value.toLowerCase();
+
+      // Await for country's name to be converted to ISO
+      const countryCodes = await countryCodesPromise;
+      const countryCoordinates = await getCityCoordinates({
+        cityName: cityName,
+        countryCode: countryCodes.Iso2,
+      });
+      console.log(countryCoordinates);
     });
 });

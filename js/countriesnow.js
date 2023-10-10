@@ -1,4 +1,4 @@
-import { getJSON } from './petitionManager.js';
+import { getJSON, postJSON } from './petitionManager.js';
 
 async function getAllCountries() {
   const apiResponseJSON = await getJSON(
@@ -7,4 +7,14 @@ async function getAllCountries() {
   return apiResponseJSON.data;
 }
 
-export { getAllCountries };
+async function getAllCitiesOfCountry(countryName) {
+  const apiResponseJSON = await postJSON(
+    'https://countriesnow.space/api/v0.1/countries/cities',
+    {
+      country: countryName,
+    }
+  );
+  console.log(apiResponseJSON);
+  return apiResponseJSON.data;
+}
+export { getAllCountries, getAllCitiesOfCountry };

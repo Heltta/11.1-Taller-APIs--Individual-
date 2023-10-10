@@ -41,7 +41,14 @@
         </div>
         <div class="my-2 d-flex flex-column">
           <label for="inputCity">Ciudad</label>
-          <input type="text" id="inputCity" />
+          <input
+            class="form-control"
+            list="dataListCities"
+            type="text"
+            id="inputCity"
+            placeholder="Type to search..."
+          />
+          <datalist id="dataListCities"></datalist>
         </div>
         <div class="my-2"><button type="submit">Submit</button></div>
       </form>

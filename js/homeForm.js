@@ -3,7 +3,8 @@ import {
   getAllCitiesOfCountry,
   getCountryISO,
 } from './countriesnow.js';
-import { getCityCoordinates } from './openweather.js';
+import { getCityCoordinates, get5dayWeatherForecast } from './openweather.js';
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Insert countries data list
@@ -61,5 +62,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         countryCode: countryCodes.Iso2,
       });
       console.log(countryCoordinates);
+
+      const forecast = get5dayWeatherForecast(
+        countryCoordinates.latitude,
+        countryCoordinates.longitude
+      );
+      console.log(await forecast);
     });
 });

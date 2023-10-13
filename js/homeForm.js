@@ -25,23 +25,32 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   let countryCodesPromise;
 
+  const inputCountryListener = async (countryName) => {
+    if (
+      !countriesData.some(
+        (countryData) =>
+          countryData.country.toLowerCase() === countryName.toLowerCase()
+      )
+    )
+      return;
+    const countryName = countryName.toLowerCase();
+    countryCodesPromise = getCountryISO(countryName);
+    const citiesData = await getAllCitiesOfCountry(countryName);
+    const dataListCities = document.getElementById('dataListCities');
+    dataListCities.innerHTML = '';
+    citiesData &&
+      citiesData?.forEach((cityName) => {
+        const optionCity = document.createElement('option');
+        optionCity.value = cityName;
+        dataListCities.appendChild(optionCity);
+      });
+  };
+
   // Insert country's cities data list
   document
     .getElementById('inputCountry')
     .addEventListener('input', async (e) => {
-      if (!countriesData.some((countryData) => countryData.country === e.data))
-        return;
-      const countryName = e.data.toLowerCase();
-      countryCodesPromise = getCountryISO(countryName);
-      const citiesData = await getAllCitiesOfCountry(countryName);
-      const dataListCities = document.getElementById('dataListCities');
-      dataListCities.innerHTML = '';
-      citiesData &&
-        citiesData?.forEach((cityName) => {
-          const optionCity = document.createElement('option');
-          optionCity.value = cityName;
-          dataListCities.appendChild(optionCity);
-        });
+      inputCountryListener(e.data);
     });
 
   // Insert openWeather API petition
@@ -54,6 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const cityName = e.target
         .querySelector('input[name=cityName]')
         .value.toLowerCase();
+
+      // Async get country ISO if promise is not made
+      if (!countryCodesPromise)
+        inputCountryListener(document.getElementById('inputCountry').value);
 
       // Await for country's name to be converted to ISO
       const countryCodes = await countryCodesPromise;

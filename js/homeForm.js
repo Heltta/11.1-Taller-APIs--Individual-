@@ -26,10 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   let countryCodesPromise;
 
   const inputCountryListener = async (countryName) => {
+    countryName = countryName.toLowerCase();
     if (
       !countriesData.some(
-        (countryData) =>
-          countryData.country.toLowerCase() === countryName.toLowerCase()
+        (countryData) => countryData.country.toLowerCase() === countryName
       )
     )
       return;

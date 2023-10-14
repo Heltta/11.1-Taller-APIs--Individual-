@@ -120,6 +120,7 @@ function calculateLaundrySafety(forecastDataPeriod) {
    * @property {'green'|'yellow'|'orange'|'red'} safetyColor
    * @property {Number} safetyScore
    * @property {String} message
+   * @property {Number} dt - Time of data forecasted, unix, UTC
    */
 
   let safetyScore = 100;
@@ -142,7 +143,7 @@ function calculateLaundrySafety(forecastDataPeriod) {
   /**
    * @type {LaundrySafetyReport}
    */
-  const safetyLevel = { safetyScore: safetyScore };
+  const safetyLevel = { safetyScore: safetyScore, dt: forecastDataPeriod.dt };
 
   // Assign color and message
   if (safetyScore <= 0) {

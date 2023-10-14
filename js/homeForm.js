@@ -8,7 +8,13 @@ import {
   get5dayWeatherForecast,
   calculateLaundrySafety,
 } from './openweather.js';
+import { createAlert } from './domElementCreator.js';
 
+/**
+ * @type {Element}
+ */
+
+const reportContainer = document.getElementById('reportContainer');
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Insert countries data list
@@ -84,10 +90,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         countryCoordinates.longitude
       );
       console.log(forecast);
+      /**
+       * @typedef LaundrySafetyReport
+       * @property {'green'|'yellow'|'orange'|'red'} safetyColor
+       * @property {Number} safetyScore
+       * @property {String} message
+       * @property {Number} dt - Time of data forecasted, unix, UTC
+       */
+
+      /**
+       * @type {Array<LaundrySafetyReport>}
+       */
       const laundryReportList = [];
       forecast.list.forEach((timePeriod) =>
         laundryReportList.push(calculateLaundrySafety(timePeriod))
       );
       console.log(laundryReportList);
+
+      laundryReportList.forEach((report) => {
+        reportContainer.append(
+          createAlert(
+            'primary',
+            report.message,
+            report.safetyColor,
+            new Date(report.dt * 1000)
+          )
+        );
+      });
     });
 });

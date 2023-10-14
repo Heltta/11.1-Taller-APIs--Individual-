@@ -3,6 +3,8 @@
  * @type {"primary"|"secondary"|"success"|"danger"|"warning"|"info"|"light"|"dark"}
  */
 
+function colorToBootstrapType() {}
+
 /**
  *
  * @param {BootstrapType} type - Bootstrap alert type
@@ -16,7 +18,7 @@ function createAlert(type, message, heading, date) {
   wrapper.role = 'alert';
   wrapper.innerHTML = [
     `<h4 class="alert-heading">${heading}</h4>`,
-    `<div>${date.toDateString()}</div>`,
+    `<div>${date.toLocaleString()}</div>`,
     `<div>${message}</div>`,
   ].join('');
 

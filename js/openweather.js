@@ -93,4 +93,73 @@ async function get5dayWeatherForecast(latitude, longitude) {
   return apiResponseJSON;
 }
 
-export { getCityCoordinates, get5dayWeatherForecast };
+/**
+ * @typedef ForecastDataPeriod
+ * @property {Number} dt - Time of data forecasted, unix, UTC
+ * @property {Object} main
+ * @property {Object} weather
+ * @property {Object} clouds
+ * @property {Object} wind
+ * @property {Number} visibility - Average visibility, metres. The maximum value of the visibility is 10km
+ * @property {String} pop - Probability of precipitation. The values of the parameter vary between 0 and 1, where 0 is equal to 0%, 1 is equal to 100%
+ * @property {Object} rain
+ * @property {Object} snow
+ * @property {Object} sys - Part of the day (n - night, d - day)
+ * @property {String} dt_txt
+ *
+ */
+
+/**
+ *
+ * @param {ForecastDataPeriod} forecastDataPeriod
+ * @returns
+ */
+function calculateLaundrySafety(forecastDataPeriod) {
+  /**
+   * @typedef LaundrySafetyReport
+   * @property {'green'|'yellow'|'orange'|'red'} safetyColor
+   * @property {Number} safetyScore
+   * @property {String} message
+   */
+
+  let safetyScore = 100;
+
+  // Adjust score based on humidity
+  safetyScore -= (25 * forecastDataPeriod.main.humidity) / 100;
+  // Adjust score based on cloudiness
+  safetyScore -= (25 * forecastDataPeriod.clouds.all) / 100;
+  // Adjust score based on temperature (Celsius)
+  safetyScore += (forecastDataPeriod.main.temp - 5) ** 3 / 500;
+  // Adjust score based on wind speed (m/s)
+  if (forecastDataPeriod.wind.speed > 25) {
+    safetyScore = 0; // Wind speed is to fast to go out safely
+  } else if (forecastDataPeriod.wind.speed > 3) {
+    safetyScore += (forecastDataPeriod.wind.speed - 3) / 25;
+  }
+  // Adjust score based on probability of precipitation
+  safetyScore -= safetyScore * forecastDataPeriod.pop;
+
+  /**
+   * @type {LaundrySafetyReport}
+   */
+  const safetyLevel = { safetyScore: safetyScore };
+
+  // Assign color and message
+  if (safetyScore <= 0) {
+    safetyLevel.safetyColor = 'red';
+    safetyLevel.message = "Don't... just don't";
+  } else if (safetyScore < 50) {
+    safetyLevel.safetyColor = 'orange';
+    safetyLevel.message = 'Only if you are ready to get wet';
+  } else if (safetyScore < 100) {
+    safetyLevel.safetyColor = 'yellow';
+    safetyLevel.message = 'Could be worse';
+  } else if (safetyScore >= 90) {
+    safetyLevel.safetyColor = 'green';
+    safetyLevel.message = 'Do the laundry like a champ';
+  }
+
+  return safetyLevel;
+}
+
+export { getCityCoordinates, get5dayWeatherForecast, calculateLaundrySafety };

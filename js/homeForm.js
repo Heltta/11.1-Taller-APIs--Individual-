@@ -3,7 +3,11 @@ import {
   getAllCitiesOfCountry,
   getCountryISO,
 } from './countriesnow.js';
-import { getCityCoordinates, get5dayWeatherForecast } from './openweather.js';
+import {
+  getCityCoordinates,
+  get5dayWeatherForecast,
+  calculateLaundrySafety,
+} from './openweather.js';
 
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -33,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       )
     )
       return;
-    const countryName = countryName.toLowerCase();
     countryCodesPromise = getCountryISO(countryName);
     const citiesData = await getAllCitiesOfCountry(countryName);
     const dataListCities = document.getElementById('dataListCities');
@@ -76,10 +79,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       console.log(countryCoordinates);
 
-      const forecast = get5dayWeatherForecast(
+      const forecast = await get5dayWeatherForecast(
         countryCoordinates.latitude,
         countryCoordinates.longitude
       );
-      console.log(await forecast);
+      console.log(forecast);
+      const laundryReportList = [];
+      forecast.list.forEach((timePeriod) =>
+        laundryReportList.push(calculateLaundrySafety(timePeriod))
+      );
+      console.log(laundryReportList);
     });
 });

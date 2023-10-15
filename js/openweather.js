@@ -13,7 +13,6 @@ async function getCityCoordinates({ cityName, stateCode, countryCode }, limit) {
     q: `${cityName}${stateCode ? ',' + stateCode : ''}${',' + countryCode}`,
     appid: openWeatherKey,
   });
-  console.log(apiResponseJSON);
   // Only the first city of the list is of interest
   const coordinates = {
     latitude: apiResponseJSON[0].lat,
@@ -110,19 +109,25 @@ async function get5dayWeatherForecast(latitude, longitude) {
  */
 
 /**
+ * @typedef SafetyColor
+ * @type {'green'|'yellow'|'orange'|'red'}
+ */
+
+/**
+ * @typedef LaundrySafetyReport
+ * @property {Number} safetyScore
+ * @property {Number} dt - Time of data forecasted, unix, UTC
+ * @property {SafetyColor} safetyColor
+ * @property {String} title
+ * @property {String} message
+ */
+
+/**
  *
  * @param {ForecastDataPeriod} forecastDataPeriod
  * @returns
  */
 function calculateLaundrySafety(forecastDataPeriod) {
-  /**
-   * @typedef LaundrySafetyReport
-   * @property {'green'|'yellow'|'orange'|'red'} safetyColor
-   * @property {Number} safetyScore
-   * @property {String} message
-   * @property {Number} dt - Time of data forecasted, unix, UTC
-   */
-
   let safetyScore = 100;
 
   // Adjust score based on humidity
@@ -148,15 +153,19 @@ function calculateLaundrySafety(forecastDataPeriod) {
   // Assign color and message
   if (safetyScore <= 0) {
     safetyLevel.safetyColor = 'red';
+    safetyLevel.title = 'Not recommended';
     safetyLevel.message = "Don't... just don't";
   } else if (safetyScore < 50) {
     safetyLevel.safetyColor = 'orange';
+    safetyLevel.title = 'High risk of clothes not drying';
     safetyLevel.message = 'Only if you are ready to get wet';
-  } else if (safetyScore < 100) {
+  } else if (safetyScore < 85) {
     safetyLevel.safetyColor = 'yellow';
+    safetyLevel.title = 'Viable weather';
     safetyLevel.message = 'Could be worse';
-  } else if (safetyScore >= 90) {
+  } else {
     safetyLevel.safetyColor = 'green';
+    safetyLevel.title = 'Excelent';
     safetyLevel.message = 'Do the laundry like a champ';
   }
 

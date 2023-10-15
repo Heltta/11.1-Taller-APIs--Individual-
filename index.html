@@ -59,8 +59,18 @@
         </div>
         <div class="my-2"><button type="submit">Submit</button></div>
       </form>
-      <section id="reportContainer">
+      <section id="reportContainer" class="container-fluid">
+        <div id="reportIntroduction" class="row d-flex flex-column d-none">
+          <h3>Okey buddy, i just checked the weather forecast</h3>
+          <p>
+            To help you find the best time to hang your clothes outside, I
+            divided the next 5 days into 3 hour periods and then I categorized
+            each one of those according to precipitation risk, cloudiness,
+            temperature and wind
+          </p>
+        </div>
         <!-- Reporte sobre recomendaciones de cuando colgar la ropa -->
+        <div id="reportContent" class="row"></div>
       </section>
     </main>
     <script type="module" src="./js/petitionManager.js"></script>

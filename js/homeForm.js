@@ -8,13 +8,10 @@ import {
   get5dayWeatherForecast,
   calculateLaundrySafety,
 } from './openweather.js';
-import { createAlert } from './domElementCreator.js';
+import { createPeriodReportAlert } from './domElementCreator.js';
 
-/**
- * @type {Element}
- */
-
-const reportContainer = document.getElementById('reportContainer');
+const reportContent = document.getElementById('reportContent');
+const reportIntroduction = document.getElementById('reportIntroduction');
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Insert countries data list
@@ -83,13 +80,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         cityName: cityName,
         countryCode: countryCodes.Iso2,
       });
-      console.log(countryCoordinates);
 
       const forecast = await get5dayWeatherForecast(
         countryCoordinates.latitude,
         countryCoordinates.longitude
       );
-      console.log(forecast);
       /**
        * @typedef LaundrySafetyReport
        * @property {'green'|'yellow'|'orange'|'red'} safetyColor
@@ -105,17 +100,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       forecast.list.forEach((timePeriod) =>
         laundryReportList.push(calculateLaundrySafety(timePeriod))
       );
-      console.log(laundryReportList);
 
+      reportIntroduction.classList.remove('d-none');
+      reportContent.innerHTML = '';
       laundryReportList.forEach((report) => {
-        reportContainer.append(
-          createAlert(
-            'primary',
-            report.message,
-            report.safetyColor,
-            new Date(report.dt * 1000)
-          )
-        );
+        const reportElement = createPeriodReportAlert(report);
+        reportElement.className += ' ';
+        const wrapper = document.createElement('div');
+        wrapper.className = 'p-2 col-12 col-sm-6 col-md-3';
+        wrapper.append(reportElement);
+        reportContent.append(wrapper);
       });
     });
 });

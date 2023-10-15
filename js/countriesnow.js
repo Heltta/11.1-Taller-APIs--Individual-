@@ -14,7 +14,6 @@ async function getAllCitiesOfCountry(countryName) {
       country: countryName,
     }
   );
-  console.log(apiResponseJSON);
   return apiResponseJSON.data;
 }
 
@@ -25,7 +24,6 @@ async function getCountryISO(countryName) {
       country: countryName,
     }
   );
-  console.log(apiResponseJSON);
   return apiResponseJSON.data;
 }
 
